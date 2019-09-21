@@ -14,9 +14,17 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseConnection implements DBConnection {
+    private static FirebaseConnection connection = null;
     private final FirebaseDatabase database;
 
-    public FirebaseConnection() {
+    public static FirebaseConnection getInstance() {
+        if (connection == null) {
+            connection = new FirebaseConnection();
+        }
+        return connection;
+    }
+
+    private FirebaseConnection() {
         firebaseInitialize();
         database = FirebaseDatabase.getInstance();
     }

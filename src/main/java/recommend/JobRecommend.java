@@ -45,7 +45,7 @@ public class JobRecommend {
     private final Set<String> historyJobIds;
 
     public JobRecommend(String userId) throws IOException {
-        DBConnection firebase = new FirebaseConnection();
+        DBConnection firebase = FirebaseConnection.getInstance();
         historyJobIds = firebase.getHistoryJobIds(userId);
         this.user = new User(userId);
 
