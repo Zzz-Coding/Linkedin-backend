@@ -77,22 +77,22 @@ public class JobRecommend {
         String location = keywordFinding(preprocess(locStringBuilder.toString()));
         System.out.println("location: " + location);
 
-        JobAPI jobAPI = new JobAPI();
-        JSONArray recommendFromJobs = jobAPI.search(keyword, location);
+        JSONArray recommendFromJobs = JobAPI.searchByLocation(keyword, location);
         System.out.println("preferJob: " + this.user.getPreferJob());
         System.out.println("preferLoc: " + this.user.getPreferLoc());
-        JSONArray recommendFromPreference = jobAPI.search(this.user.getPreferJob(), this.user.getPreferLoc());
+        JSONArray recommendFromPreference = JobAPI.searchByLocation(this.user.getPreferJob(), this.user.getPreferLoc());
         // merge two results
         for (int i = 0; i < recommendFromJobs.length(); i++) {
             recommendFromPreference.put(recommendFromJobs.getJSONObject(i));
         }
         System.out.println("original length: " + recommendFromPreference.length());
         JSONArray recommendation = new JSONArray();
-        // filter history
+        // filter history and duplicates
+        Set<String> recJobIds = new HashSet<>();
         for (int i = 0; i < recommendFromPreference.length(); i++) {
             JSONObject rec = recommendFromPreference.getJSONObject(i);
             String jobId = rec.getString("id");
-            if (!historyJobIds.contains(jobId)) {
+            if (!historyJobIds.contains(jobId) && recJobIds.add(jobId)) {
                 recommendation.put(rec);
             }
         }

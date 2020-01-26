@@ -11,10 +11,20 @@ import java.net.URL;
 public class JobAPI {
     private static final String URL = "https://jobs.github.com/positions.json";
 
-    public JSONArray search(String keyword, String location) {
+    public static JSONArray searchByLocation(String keyword, String location) {
         location = location.replaceAll(" ", "+");
 
         String query = String.format("description=%s&location=%s", keyword, location);
+        return query(query);
+    }
+
+    public static JSONArray searchByLatLong(String keyword, String lat, String lon) {
+
+        String query = String.format("description=%s&lat=%s&long=%s", keyword, lat, lon);
+        return query(query);
+    }
+
+    private static JSONArray query(String query) {
         String url = URL + "?" + query;
 
         try {
